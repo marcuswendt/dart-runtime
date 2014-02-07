@@ -409,12 +409,6 @@ DART_EXPORT void Dart_DeletePersistentHandle(Dart_PersistentHandle object);
  * This handle has the lifetime of the current isolate unless it is
  * explicitly deallocated by calling Dart_DeletePersistentHandle.
  *
- * If the object becomes unreachable the callback is invoked with the weak
- * persistent handle and the peer as arguments. This gives the native code the
- * ability to cleanup data associated with the object and to delete the weak
- * persistent handle. It is illegal to call into the VM from the callback,
- * except to delete the weak persistent handle.
- *
  * Requires there to be a current isolate.
  *
  * \param object An object.
@@ -981,18 +975,6 @@ DART_EXPORT void Dart_SetMessageNotifyCallback(
  * \return A valid handle if no error occurs during the operation.
  */
 DART_EXPORT Dart_Handle Dart_HandleMessage();
-
-/**
- * Handles any pending messages for the vm service for the current
- * isolate.
- *
- * This function may be used by an embedder at a breakpoint to avoid
- * pausing the vm service.
- *
- * \return true if the vm service requests the program resume
- * execution, false otherwise
- */
-DART_EXPORT bool Dart_HandleServiceMessages();
 
 /**
  * Processes any incoming messages for the current isolate.
@@ -2122,8 +2104,7 @@ typedef void (*Dart_NativeFunction)(Dart_NativeArguments arguments);
  * See Dart_SetNativeResolver.
  */
 typedef Dart_NativeFunction (*Dart_NativeEntryResolver)(Dart_Handle name,
-                                                        int num_of_arguments,
-                                                        bool* auto_setup_scope);
+                                                        int num_of_arguments);
 /* TODO(turnidge): Consider renaming to NativeFunctionResolver or
  * NativeResolver. */
 
